@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "Kyle J. Ryan Personal Website"
+title: "About Me"
 excerpt: "About Me"
 author_profile: true
 redirect_from: 
