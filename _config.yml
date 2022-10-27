@@ -177,20 +177,21 @@ kramdown:
 # Collections
 collections:
   teaching:
-    output: false
+    output: true
     permalink: /:collection/:path/
   publications:
-    output: false
+    output: true
     permalink: /:collection/:path/
   portfolio:
-    output: false
+    output: true
     permalink: /:collection/:path/
   talks:
-    output: false
+    output: true
     permalink: /:collection/:path/
 
 
 # Defaults
+'''
 defaults:
   # _posts
   - scope:
@@ -245,6 +246,7 @@ defaults:
       layout: talk
       author_profile: true
       share: true
+'''
 
 # Sass/SCSS
 sass:
