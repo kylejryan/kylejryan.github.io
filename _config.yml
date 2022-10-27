@@ -191,7 +191,6 @@ collections:
 
 
 # Defaults
-'''
 defaults:
   # _posts
   - scope:
@@ -246,7 +245,7 @@ defaults:
       layout: talk
       author_profile: true
       share: true
-'''
+
 
 # Sass/SCSS
 sass:
