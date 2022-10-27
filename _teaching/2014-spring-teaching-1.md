@@ -1,20 +1,10 @@
 ---
-title: "Teaching experience 1"
+title: "NoSQL Database Systems"
 collection: teaching
-type: "Undergraduate course"
-permalink: /teaching/2014-spring-teaching-1
-venue: "University 1, Department"
-date: 2014-01-01
-location: "City, Country"
+type: "CISC 5640"
+permalink: /teaching/2022-fall-01
+venue: "Fordam University, Graduate School of Arts & Sciences"
+date: Fall 2022
+location: "New York, New York"
 ---
-
 This is a description of a teaching experience. You can use markdown like any other post.
-
-Heading 1
-======
-
-Heading 2
-======
-
-Heading 3
-======
