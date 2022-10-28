@@ -12,12 +12,12 @@ Hi! I'm Kyle, a MSCS Candidate at Fordham University. I currently work as a rese
 
 My Work & Research
 ======
-Under construction.
+Under construction...
 
 My Background & History
 ======
-Under construction.
+Under construction...
 
 Hobbies & Interests
 ------
-Under construction.
+Under construction...
