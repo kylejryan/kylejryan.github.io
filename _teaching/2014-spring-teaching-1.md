@@ -7,4 +7,4 @@ venue: "Fordam University, Graduate School of Arts & Sciences"
 date: Fall 2022
 location: "New York, New York"
 ---
-This is a description of a teaching experience. You can use markdown like any other post.
+Desc.
