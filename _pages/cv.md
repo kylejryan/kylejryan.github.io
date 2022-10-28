@@ -6,7 +6,7 @@ author_profile: true
 redirect_from:
   - /resume
 ---
-
+Currently perfecting for my PhD applications. Coming soon!
 <!---
 {% include base_path %}
 
