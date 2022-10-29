@@ -22,4 +22,4 @@ Under construction...
 
 Hobbies & Interests
 ------
-If you are interested, you can find my hobbies [here](https://www.kylejryan.github.io/hobbies).
+If you are interested, you can find my hobbies [here](/hobbies/).
