@@ -1,12 +1,13 @@
 {
-	"name": "reactfolio",
+	"name": "kylejryan.github.io",
 	"version": "1.1.0",
 	"description": "Personal portfolio template built using Reactjs",
 	"author": {
-		"name": "Tharindu N. Madhusanka",
-		"email": "mail@tharindu.dev",
+		"name": "Kyle Ryan",
+		"email": "kylejryan@proton.me",
 		"url": "https://kylejryan.github.io"
 	},
+	"homepage": "https://kylejryan.github.io/",
 	"license": "MIT",
 	"private": true,
 	"dependencies": {
@@ -31,7 +32,9 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"predeploy": "npm run build",
+		"deploy": "gh-pages -d build"
 	},
 	"eslintConfig": {
 		"extends": [
@@ -54,5 +57,8 @@
 	"prettier": {
 		"useTabs": true,
 		"tabWidth": 4
+	},
+	"devDependencies": {
+		"gh-pages": "^5.0.0"
 	}
 }
