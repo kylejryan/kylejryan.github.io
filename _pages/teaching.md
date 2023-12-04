@@ -7,6 +7,14 @@ nav: true
 nav_order: 5
 ---
 
-For now, this page is assumed to be a static description of your courses. You can convert it to a collection similar to `_projects/` so that you can have a dedicated page for each course.
+# Fordham University
 
-Organize your courses by years, topics, or universities, however you like!
+## Adjunct Professor of Computer Science
+_January 2023 — May 2023_
+- CISC 1800 Introduction to Computer Programming
+
+## Teaching Assistant
+_August 2022 — December 2022_
+- CISC 5640 NoSQL Database Systems
+- CISC 5790 Data Mining
+
