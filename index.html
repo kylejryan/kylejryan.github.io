@@ -77,18 +77,25 @@
             position: relative;
         }
 
-        .data-stream span {
+        .data-stream {
+            background-color: var(--accent-color);
+            color: var(--main-bg-color);
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 1rem;
+            padding: 0.5rem;
+            position: relative;
+        }
+
+        .data-stream-content {
             display: inline-block;
-            animation: scroll 60s linear infinite;
+            padding-right: 2rem; /* Add some space between repetitions */
+            animation: scroll 30s linear infinite;
         }
 
         @keyframes scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-
-        .section {
-            padding: 0 1rem;
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50%, 0); }
         }
 
         .section h2 {
@@ -165,7 +172,10 @@
         </header>
 
         <div class="data-stream">
-            <span>01001001 00100111 01101101 00100000 01110011 01110101 01110010 01110000 01110010 01101001 01110011 01100101 01100100 00100000 01111001 01101111 01110101 00100000 01110100 01110010 01100001 01101110 01110011 01101100 01100001 01110100 01100101 01100100 00100000 01110100 01101000 01101001 01110011</span>
+            <div class="data-stream-content">
+                01001001 00100111 01101101 00100000 01110011 01110101 01110010 01110000 01110010 01101001 01110011 01100101 01100100 00100000 01111001 01101111 01110101 00100000 01110100 01110010 01100001 01101110 01110011 01101100 01100001 01110100 01100101 01100100 00100000 01110100 01101000 01101001 01110011
+                01001001 00100111 01101101 00100000 01110011 01110101 01110010 01110000 01110010 01101001 01110011 01100101 01100100 00100000 01111001 01101111 01110101 00100000 01110100 01110010 01100001 01101110 01110011 01101100 01100001 01110100 01100101 01100100 00100000 01110100 01101000 01101001 01110011
+            </div>
         </div>
         <section class="section">
             <h2>About Me</h2>
