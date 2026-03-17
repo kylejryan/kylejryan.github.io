@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Logs - Kyle Ryan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+
+    <header class="site-header">
+        <nav class="site-nav">
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="research.html">Research</a>
+                <a href="blog.html" class="active">Logs</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="hero">
+            <h1 class="hero-title">Logs</h1>
+            <div class="hero-meta">SYS/003</div>
+        </section>
+
+        <div class="divider"></div>
+
+        <div class="log-list">
+
+            <a class="log-entry" href="https://www.linkedin.com/pulse/anatomy-ai-orchestrated-government-breach-kyle-ryan-qvfje/" target="_blank" rel="noopener">
+                <div class="log-time">2026.02.26</div>
+                <div class="log-body">
+                    <div class="log-cmd">cat ai_orchestrated_breach.md</div>
+                    <div class="log-output">
+                        Anatomy of an AI-Orchestrated Government Breach. A solo attacker used Claude as a penetration testing co-pilot to compromise roughly a dozen Mexican government and infrastructure targets. What happened at the systems level, what the jailbreak actually exploited, and why the real lesson isn't about AI safety theater.
+                    </div>
+                </div>
+                <div class="log-status">Published</div>
+            </a>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="divider"></div>
+        <div class="footer-prompt">
+            <span class="prompt">&gt;</span>
+            <span>tail -f /var/log/publications</span>
+            <span class="cursor"></span>
+        </div>
+    </footer>
+
+</div>
+
+<script src="network.js"></script>
+</body>
+</html>

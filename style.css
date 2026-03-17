@@ -1,0 +1,569 @@
+:root {
+    --bg: #030303;
+    --bg-surface: #0A0A0A;
+    --ink: #FFFFFF;
+    --ink-dim: rgba(255, 255, 255, 0.6);
+    --ink-faint: rgba(255, 255, 255, 0.15);
+    --border: rgba(255, 255, 255, 0.3);
+    --font-sans: "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "SF Mono", "Roboto Mono", Menlo, Consolas, monospace;
+    --font-display: "Helvetica Neue", -apple-system, sans-serif;
+    --pad: clamp(20px, 5vw, 80px);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    min-height: 100vh;
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+body.has-fixed-footer {
+    overflow: hidden;
+}
+
+body.has-fixed-footer .app-container {
+    height: 100vh;
+    height: 100dvh;
+}
+
+body.has-fixed-footer .main-content {
+    overflow-y: auto;
+    padding-bottom: 80px;
+}
+
+a {
+    color: var(--ink);
+    text-decoration: none;
+    transition: opacity 0.15s;
+}
+
+a:hover { opacity: 0.7; }
+
+.log-line.output a {
+    color: inherit;
+    opacity: 1;
+    border-bottom: 1px solid var(--ink-faint);
+    transition: border-color 0.15s;
+}
+
+.log-line.output a:hover {
+    opacity: 1;
+    border-bottom-color: var(--ink);
+}
+
+::-webkit-scrollbar { width: 0px; background: transparent; }
+* { -ms-overflow-style: none; scrollbar-width: none; }
+
+
+/* ========================================
+   LAYOUT
+   ======================================== */
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+.main-content {
+    flex: 1;
+    padding: 0 var(--pad);
+}
+
+
+/* ========================================
+   HEADER / NAV
+   ======================================== */
+
+.site-header {
+    padding: var(--pad) var(--pad) 0;
+    flex-shrink: 0;
+}
+
+.site-nav {
+    display: flex;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--ink);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+}
+
+.nav-links a {
+    color: var(--ink-dim);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--ink);
+    opacity: 1;
+}
+
+
+/* ========================================
+   HERO
+   ======================================== */
+
+.hero {
+    padding: 60px 0 40px;
+    position: relative;
+}
+
+.hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -3px;
+}
+
+.hero-subtitle {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink-dim);
+    margin-top: 20px;
+    line-height: 1.6;
+}
+
+.hero-meta {
+    position: absolute;
+    right: 0;
+    top: 60px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--ink-dim);
+    font-family: var(--font-mono);
+    transform: rotate(90deg);
+    transform-origin: top right;
+}
+
+
+/* ========================================
+   DOTTED DIVIDER (from react-app.js)
+   ======================================== */
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background-image: linear-gradient(to right, var(--ink) 50%, transparent 50%);
+    background-size: 6px 1px;
+    background-repeat: repeat-x;
+    margin: 32px 0;
+}
+
+.divider-sm {
+    margin: 20px 0;
+}
+
+
+/* ========================================
+   TERMINAL BLOCK
+   ======================================== */
+
+.terminal-block {
+    margin: 0;
+}
+
+.log-line {
+    display: flex;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+.log-line + .log-line {
+    margin-top: 3px;
+}
+
+.log-line .prompt {
+    margin-right: 8px;
+    user-select: none;
+    flex-shrink: 0;
+    color: var(--ink-dim);
+}
+
+.log-line.output {
+    opacity: 0.7;
+    padding-left: 20px;
+}
+
+.log-line.cmd {
+    margin-top: 16px;
+}
+
+.log-line.cmd:first-child {
+    margin-top: 0;
+}
+
+.highlight {
+    background-color: var(--ink);
+    color: var(--bg);
+    padding: 1px 6px;
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+
+/* ========================================
+   CRT SCAN LINE EFFECT
+   ======================================== */
+
+.app-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.008) 2px,
+        rgba(255, 255, 255, 0.008) 4px
+    );
+    pointer-events: none;
+    z-index: 99;
+}
+
+.app-container::after {
+    content: '';
+    position: fixed;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.015) 40%,
+        rgba(255, 255, 255, 0.03) 50%,
+        rgba(255, 255, 255, 0.015) 60%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 100;
+    animation: scanline 6s linear infinite;
+}
+
+@keyframes scanline {
+    0% { top: -60px; }
+    100% { top: 100vh; }
+}
+
+
+/* ========================================
+   SITE FOOTER
+   ======================================== */
+
+.site-footer {
+    padding: 0 var(--pad) 32px;
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+.footer-prompt {
+    display: flex;
+    align-items: center;
+    margin-top: 24px;
+    font-size: 13px;
+}
+
+.footer-prompt .prompt {
+    margin-right: 8px;
+    color: var(--ink-dim);
+    user-select: none;
+}
+
+
+/* ========================================
+   BLOG LOG ENTRIES
+   ======================================== */
+
+.log-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.log-entry {
+    display: grid;
+    grid-template-columns: 100px 1fr 80px;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: baseline;
+    text-decoration: none;
+    color: var(--ink);
+    transition: background-color 0.15s;
+}
+
+a.log-entry:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+    opacity: 1;
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+.log-time {
+    font-size: 11px;
+    color: var(--ink);
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.log-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.log-cmd {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.4;
+}
+
+.log-cmd::before {
+    content: "\276F";
+    color: var(--ink-dim);
+    margin-right: 8px;
+}
+
+.log-output {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-dim);
+    line-height: 1.5;
+}
+
+.log-status {
+    font-size: 10px;
+    text-align: right;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-active {
+    color: var(--ink);
+}
+
+.active-process {
+    background-image: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+    margin: 0 calc(-1 * var(--pad));
+    padding: 0 var(--pad);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.active-process .log-entry {
+    border-bottom: none;
+}
+
+
+/* ========================================
+   INPUT FOOTER (blog page)
+   ======================================== */
+
+.input-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg);
+    padding: 20px var(--pad);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+}
+
+.prompt-symbol {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-dim);
+}
+
+.footer-text {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink);
+}
+
+
+/* ========================================
+   BLINKING CURSOR
+   ======================================== */
+
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background-color: var(--ink);
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+
+/* ========================================
+   RESEARCH AREAS
+   ======================================== */
+
+.research-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.research-item {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.research-item:last-child {
+    border-bottom: none;
+}
+
+.research-index {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--ink-dim);
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+}
+
+.research-title {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.3px;
+    margin-bottom: 8px;
+}
+
+.research-desc {
+    font-size: 12px;
+    color: var(--ink-dim);
+    line-height: 1.6;
+    max-width: 700px;
+}
+
+
+/* ========================================
+   SECTION LABELS
+   ======================================== */
+
+.section-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 16px;
+    font-family: var(--font-mono);
+}
+
+
+/* ========================================
+   CONNECT LINKS (home page)
+   ======================================== */
+
+.connect-grid {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.connect-link {
+    font-size: 12px;
+    color: var(--ink-dim);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+}
+
+.connect-link:hover {
+    color: var(--ink);
+    opacity: 1;
+}
+
+.connect-label {
+    color: var(--ink);
+    margin-right: 8px;
+}
+
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 640px) {
+    .site-nav {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .nav-links {
+        gap: 20px;
+    }
+
+    .hero-title {
+        letter-spacing: -1.5px;
+    }
+
+    .hero-meta {
+        display: none;
+    }
+
+    .log-entry {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .log-time {
+        font-size: 10px;
+        color: var(--ink-dim);
+    }
+
+    .log-status {
+        text-align: left;
+    }
+
+    .connect-grid {
+        flex-direction: column;
+        gap: 12px;
+    }
+}

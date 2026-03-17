@@ -3,186 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kyle Ryan - AI Security Research</title>
-    <style>
-        body {
-            font-family: "Courier New", Courier, monospace;
-            line-height: 1.6;
-            max-width: 650px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #f3f3f3;
-            color: #333;
-        }
-
-        header {
-            border-bottom: 2px solid #333;
-            margin-bottom: 2em;
-            padding-bottom: 1em;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin: 0;
-        }
-
-        .title {
-            font-size: 16px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .subtitle {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        nav {
-            margin: 20px 0;
-        }
-
-        nav a {
-            color: #333;
-            text-decoration: none;
-            margin-right: 20px;
-            border-bottom: 1px dotted #333;
-        }
-
-        nav a:hover {
-            border-bottom: 1px solid #333;
-        }
-
-        section {
-            margin: 40px 0;
-        }
-
-        h2 {
-            font-size: 20px;
-            border-left: 4px solid #333;
-            padding-left: 10px;
-        }
-
-        .focus-area {
-            margin: 15px 0;
-            padding-left: 20px;
-        }
-
-        .keyword {
-            background-color: #e0e0e0;
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-size: 14px;
-        }
-
-        footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #333;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .blink {
-            animation: blink 1s infinite;
-            display: inline-block;
-            margin-left: 5px;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-                margin: 20px;
-            }
-        }
-        /* Style for the research and current work sections */
-        #research, #current {
-            margin-bottom: 40px; /* Adds space below each section */
-        }
-
-        /* Style for the unordered lists */
-        .focus-area ul {
-            list-style-type: disc; /* Ensures bullet points are displayed */
-            padding-left: 20px; /* Adds indentation to the list */
-        }
-
-        /* Style for each list item to add spacing */
-        .focus-area ul li {
-            margin-bottom: 15px; /* Adds 15px space below each list item */
-            line-height: 1.6; /* Improves readability */
-        }
-
-        /* Optional: Style for the keywords if needed */
-        .keyword {
-            font-weight: bold;
-            color: #2c3e50; /* Example color, adjust as needed */
-        }
-    </style>
+    <title>Kyle Ryan</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Kyle Ryan</h1>
-        <div class="title">Head of AI Engineering, Dune Security<span class="blink">_</span></div>
-        <div class="subtitle">Adjunct Professor, Fordham University</div>
-        <nav>
-            <a href="#research">Research</a>
-            <a href="#current">Current Work</a>
-            <a href="#speaking">Speaking</a>
-            <a href="#teaching">Teaching</a>
-            <a href="#contact">Contact</a>
+
+<div class="app-container">
+
+    <header class="site-header">
+        <nav class="site-nav">
+            <div class="nav-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="research.html">Research</a>
+                <a href="blog.html">Logs</a>
+            </div>
         </nav>
     </header>
 
-    <section id="research">
-    <h2>Research Areas</h2>
-    <p>My research operates at the intersection of artificial intelligence and cybersecurity, specifically:</p>
-    <div class="focus-area">
-        <ul>
-            <li><strong>Security and Privacy in AI Systems:</strong> Investigating robust frameworks to safeguard AI architectures against adversarial threats, ensuring data integrity, model confidentiality, and resilience against unauthorized access and manipulation.</li>
-            <li><strong>Artificial Intelligence in Offensive Security Operations:</strong> Developing advanced AI-driven methodologies for proactive cybersecurity measures, including automated vulnerability detection, penetration testing, and adaptive threat exploitation to enhance offensive security capabilities.</li>
-            <li><strong>AI Alignment and Safety:</strong> Exploring mechanisms to align AI system behaviors with human values and ethical standards, addressing challenges related to autonomous decision-making, unintended consequences, and the mitigation of systemic risks associated with advanced AI deployments.</li>
-            <li><strong>Intelligent Agents Utilizing Planning, Reinforcement Learning, and Large Language Models (LLMs):</strong> Designing and implementing sophisticated autonomous agents that integrate planning algorithms, reinforcement learning paradigms, and large language models to perform complex, real-world tasks with high adaptability and intelligence.</li>
-        </ul>
-    </div>
-</section>
+    <main class="main-content">
+        <section class="hero">
+            <h1 class="hero-title">Kyle<br>Ryan</h1>
+            <p class="hero-subtitle">
+                Head of Research &amp; Development at Pensar<br>
+                Adjunct Professor of Computer Science at Fordham University
+            </p>
+            <div class="hero-meta">SYS/001</div>
+        </section>
 
-<section id="current">
-    <h2>Current Work</h2>
-    <p>I am currently engaged in the development of intelligent agents capable of making autonomous, real-world decisions through:</p>
-    <div class="focus-area">
-        <ul>
-            <li><strong>Advanced Planning and Reinforcement Learning Systems:</strong> Engineering cutting-edge planning algorithms and reinforcement learning frameworks that enable agents to navigate complex environments, optimize decision-making processes, and achieve strategic objectives efficiently.</li>
-            <li><strong>Integration of Large Language Models for Decision-Making:</strong> Leveraging the capabilities of large language models to enhance the contextual understanding, reasoning, and interactive decision-making processes of intelligent agents, facilitating more nuanced and effective responses in dynamic scenarios.</li>
-            <li><strong>Applications of AI in Offensive Security with Enhanced Social Engineering:</strong> Utilizing artificial intelligence techniques to advance offensive security operations, specifically focusing on sophisticated social engineering strategies, automated persuasion tactics, and the development of adaptive tools to manipulate and influence target behaviors effectively.</li>
-        </ul>
-    </div>
-</section>
+        <div class="divider"></div>
 
+        <div class="terminal-block">
+            <div class="log-line cmd">
+                <span class="prompt">&gt;</span>
+                <span>whoami</span>
+            </div>
+            <div class="log-line output">
+                <span>Offensive security engineer and AI agent architect building autonomous pentesting systems. I design and ship AI agents that execute the full attack chain end-to-end&mdash;automated reconnaissance, vulnerability discovery, exploit development, and remediation&mdash;without human intervention.</span>
+            </div>
+            <div class="log-line output" style="margin-top: 12px;">
+                <span>Previously, I built production-grade adversary simulation platforms spanning phishing, smishing, vishing, and deepfake-based social engineering at scale, emulating advanced threat actor TTPs. Now I'm focused on the next evolution: agents that find and prove vulnerabilities before attackers do.</span>
+            </div>
+            <div class="log-line output" style="margin-top: 12px;">
+                <span>As adversaries weaponize AI, I help organizations quantify real exposure through repeatable, autonomous security testing that identifies critical gaps at machine speed.</span>
+            </div>
 
-    <section id="speaking">
-        <h2>Recent Talks</h2>
-        <p>Columbia University<br>
-        "The Evolution of AI-Powered Cyberattacks: How APTs and Cybercrime Groups are Leveraging AI"</p>
-    </section>
+            <div class="log-line cmd">
+                <span class="prompt">&gt;</span>
+                <span>ls -la research/</span>
+            </div>
+            <div class="log-line output"><span>drwxr-xr-x&nbsp; <a href="research.html#autonomous-offensive-security">autonomous_offensive_security/</a></span></div>
+            <div class="log-line output"><span>drwxr-xr-x&nbsp; <a href="research.html#ai-cyber-capability-evaluation">ai_cyber_capability_evaluation/</a></span></div>
+            <div class="log-line output"><span>drwxr-xr-x&nbsp; <a href="research.html#ai-safety-adversarial-domains">ai_safety_adversarial_domains/</a></span></div>
+        </div>
 
-    <section id="teaching">
-        <h2>Teaching</h2>
-        <p>Data Structures (C++)</p>
-    </section>
+        <div class="divider"></div>
 
-    <section id="contact">
-        <h2>Contact</h2>
-        <p>Find me on LinkedIn.</p>
-    </section>
+        <div class="section-label">// connect --pubkey</div>
+        <div class="connect-grid">
+            <a href="https://github.com/kylejryan" target="_blank" rel="noopener" class="connect-link">
+                <span class="connect-label">github</span>kylejryan
+            </a>
+            <a href="https://www.linkedin.com/in/kylejohnryan/" target="_blank" rel="noopener" class="connect-link">
+                <span class="connect-label">linkedin</span>kylejohnryan
+            </a>
+            <a href="https://x.com/kyjry" target="_blank" rel="noopener" class="connect-link">
+                <span class="connect-label">twitter</span>@kyjry
+            </a>
+        </div>
+    </main>
 
-
-    <footer>
-        Last updated: December 2024 
+    <footer class="site-footer">
+        <div class="divider"></div>
+        <div class="footer-prompt">
+            <span class="prompt">&gt;</span>
+            <span>tail -f /var/log/auth.log</span>
+            <span class="cursor"></span>
+        </div>
     </footer>
+
+</div>
+
+
+<script src="network.js"></script>
 </body>
 </html>
