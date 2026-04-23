@@ -1,3 +1,32 @@
+@font-face {
+    font-family: "Commit Mono";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("fonts/CommitMono-400-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Commit Mono";
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url("fonts/CommitMono-400-italic.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Commit Mono";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("fonts/CommitMono-700-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Commit Mono";
+    font-style: italic;
+    font-weight: 700;
+    font-display: swap;
+    src: url("fonts/CommitMono-700-italic.woff2") format("woff2");
+}
+
 :root {
     --bg: #030303;
     --bg-surface: #0A0A0A;
@@ -5,9 +34,9 @@
     --ink-dim: rgba(255, 255, 255, 0.6);
     --ink-faint: rgba(255, 255, 255, 0.15);
     --border: rgba(255, 255, 255, 0.3);
-    --font-sans: "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --font-mono: "SF Mono", "Roboto Mono", Menlo, Consolas, monospace;
-    --font-display: "Helvetica Neue", -apple-system, sans-serif;
+    --font-mono: "Commit Mono", "SF Mono", "Roboto Mono", Menlo, Consolas, monospace;
+    --font-sans: var(--font-mono);
+    --font-display: var(--font-mono);
     --pad: clamp(20px, 5vw, 80px);
 }
 
@@ -135,10 +164,11 @@ a:hover { opacity: 0.7; }
 
 .hero-title {
     font-family: var(--font-display);
-    font-size: clamp(48px, 8vw, 96px);
-    font-weight: 500;
-    line-height: 0.9;
-    letter-spacing: -3px;
+    font-size: clamp(44px, 7.5vw, 88px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
 }
 
 .hero-subtitle {
@@ -469,9 +499,9 @@ a.log-entry:hover {
 
 .research-title {
     font-family: var(--font-sans);
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: -0.3px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0;
     margin-bottom: 8px;
 }
 
@@ -541,7 +571,7 @@ a.log-entry:hover {
     }
 
     .hero-title {
-        letter-spacing: -1.5px;
+        letter-spacing: -0.02em;
     }
 
     .hero-meta {

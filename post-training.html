@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Post-Training Field Guide — Kyle Ryan</title>
+    <meta name="description" content="From gradient descent to GRPO. A terminal-native walkthrough of how modern LLMs are post-trained — SFT, LoRA, RLHF, DPO, GRPO, RLVR." />
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="post-training.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body class="pt-body">
+
+<div class="pt-progress" aria-hidden="true"><span></span></div>
+
+<div class="app-container">
+
+    <header class="site-header">
+        <nav class="site-nav">
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="research.html">Research</a>
+                <a href="blog.html" class="active">Logs</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content pt-main">
+
+        <section class="hero pt-hero">
+            <div class="pt-breadcrumb"><a href="blog.html">../logs</a> / post_training_field_guide.md</div>
+            <h1 class="hero-title pt-title">Post-Training<br>Field Guide</h1>
+            <p class="hero-subtitle pt-subtitle">
+                From gradient descent to GRPO.<br>
+                How frontier models are actually trained after pre-training ends.
+            </p>
+            <div class="pt-meta-row">
+                <span class="pt-meta-pill">2026.04.22</span>
+                <span class="pt-meta-pill">10 chapters</span>
+                <span class="pt-meta-pill">~45 min read</span>
+                <span class="pt-meta-pill">draft</span>
+            </div>
+            <div class="hero-meta">SYS/004</div>
+        </section>
+
+        <div class="divider"></div>
+
+        <div class="pt-layout">
+
+            <aside class="pt-toc" aria-label="Table of contents">
+                <div class="pt-toc-label">// toc.txt</div>
+                <ol class="pt-toc-list">
+                    <li><a href="#foundations" data-toc="foundations"><span class="pt-toc-idx">00</span><span class="pt-toc-name">Foundations</span></a></li>
+                    <li><a href="#gradient-descent" data-toc="gradient-descent"><span class="pt-toc-idx">01</span><span class="pt-toc-name">Gradient Descent</span></a></li>
+                    <li><a href="#sft" data-toc="sft"><span class="pt-toc-idx">02</span><span class="pt-toc-name">Supervised Fine-Tuning</span></a></li>
+                    <li><a href="#peft" data-toc="peft"><span class="pt-toc-idx">03</span><span class="pt-toc-name">Parameter-Efficient Methods</span></a></li>
+                    <li><a href="#rlhf" data-toc="rlhf"><span class="pt-toc-idx">04</span><span class="pt-toc-name">RLHF</span></a></li>
+                    <li><a href="#dpo" data-toc="dpo"><span class="pt-toc-idx">05</span><span class="pt-toc-name">DPO &amp; Variants</span></a></li>
+                    <li><a href="#grpo" data-toc="grpo"><span class="pt-toc-idx">06</span><span class="pt-toc-name">GRPO &amp; DAPO</span></a></li>
+                    <li><a href="#reasoning" data-toc="reasoning"><span class="pt-toc-idx">07</span><span class="pt-toc-name">Reasoning &amp; RLVR</span></a></li>
+                    <li><a href="#advanced" data-toc="advanced"><span class="pt-toc-idx">08</span><span class="pt-toc-name">Advanced Topics</span></a></li>
+                    <li><a href="#practical" data-toc="practical"><span class="pt-toc-idx">09</span><span class="pt-toc-name">Practical Guide</span></a></li>
+                </ol>
+                <div class="pt-toc-marker" aria-hidden="true"></div>
+            </aside>
+
+            <article class="pt-article">
+
+                <!-- ========== 00 FOUNDATIONS ========== -->
+                <section class="pt-chapter" id="foundations" data-chapter="00">
+                    <header class="pt-ch-head">
+                        <div class="pt-ch-idx">[00]</div>
+                        <h2 class="pt-ch-title">Foundations</h2>
+                        <div class="pt-ch-sub">What post-training is, and why it matters.</div>
+                        <div class="pt-ch-cmd"><span class="prompt">$</span> man post-training</div>
+                    </header>
+
+                    <p>Pre-training gives a language model its raw capability — predicting the next token across trillions of words. But a pre-trained model is essentially an autocomplete engine. It can't follow instructions, refuse harmful requests, or reason through multi-step problems. Post-training is the set of techniques that turns that autocomplete engine into something you can actually ship.</p>
+
+                    <p>Modern post-training follows three stages, each solving a distinct problem. Skip any of them and the failure mode is immediate: skip SFT and the model can't follow instructions; skip preference tuning and it's capable but abrasive; skip RL and you don't get the emergent reasoning seen in models like DeepSeek-R1.</p>
+
+                    <div class="pt-pipeline" data-demo="pipeline">
+                        <div class="pt-pipeline-step" data-step="0">
+                            <div class="pt-pipeline-num">01</div>
+                            <div class="pt-pipeline-name">Supervised Fine-Tuning</div>
+                            <div class="pt-pipeline-desc">Teach the model to follow instructions via curated input/output pairs. Next-token prediction on demonstrations of desired behavior.</div>
+                        </div>
+                        <div class="pt-pipeline-arrow"></div>
+                        <div class="pt-pipeline-step" data-step="1">
+                            <div class="pt-pipeline-num">02</div>
+                            <div class="pt-pipeline-name">Preference Tuning</div>
+                            <div class="pt-pipeline-desc">Shape <em>how</em> the model responds. DPO, KTO, ORPO — the model learns from ranked pairs instead of absolute labels.</div>
+                        </div>
+                        <div class="pt-pipeline-arrow"></div>
+                        <div class="pt-pipeline-step" data-step="2">
+                            <div class="pt-pipeline-num">03</div>
+                            <div class="pt-pipeline-name">Reinforcement Learning</div>
+                            <div class="pt-pipeline-desc">RLHF, GRPO, RLVR. Optimize against reward signals — human preferences, reward models, or verifiers — to elicit reasoning and tool use.</div>
+                        </div>
+                    </div>
+
+                    <p class="pt-aside">Each stage builds on the previous one, but the boundaries are blurring. ORPO merges SFT and preference tuning into one objective. RLVR replaces human preferences with automated verifiers. The trajectory is clear: every generation of methods removes a dependency.</p>
+                </section>
+
+                <!-- ========== 01 GRADIENT DESCENT ========== -->
+                <section class="pt-chapter" id="gradient-descent" data-chapter="01">
+                    <header class="pt-ch-head">
+                        <div class="pt-ch-idx">[01]</div>
+                        <h2 class="pt-ch-title">Gradient Descent</h2>
+                        <div class="pt-ch-sub">The engine behind all learning.</div>
+                        <div class="pt-ch-cmd"><span class="prompt">$</span> trace grad_descent</div>
+                    </header>
+
+                    <p>Every technique in this guide — SFT, LoRA, DPO, GRPO — reduces to the same idea: define a scalar loss, compute its gradient with respect to the model's parameters, and take a small step in the opposite direction. Repeat until the loss stops dropping.</p>
+
+                    <div class="pt-math" data-tex="\theta_{t+1} = \theta_t - \eta \cdot \nabla_\theta \mathcal{L}(\theta_t)"></div>
+
+                    <p>The loss <span class="pt-math-inline" data-tex="\mathcal{L}"></span> quantifies how wrong the model is. For language modeling, it's the negative log-likelihood of the next token — a single scalar summarizing billions of parameters' worth of being-wrong.</p>
+
+                    <div class="pt-math" data-tex="\mathcal{L}(\theta) = -\sum_{i=1}^{N} \log P_\theta(x_i | x_{<i})"></div>
+
+                    <p>The learning rate <span class="pt-math-inline" data-tex="\eta"></span> controls step size. Too large and updates overshoot good minima; too small and training stalls. Post-training typically uses <span class="pt-math-inline" data-tex="\eta \sim 10^{-5}"></span> — two to three orders of magnitude smaller than pre-training, because we're nudging an already-capable model rather than shaping raw behavior.</p>
+
+                    <div class="pt-demo" data-demo="loss-landscape">
+                        <div class="pt-demo-head">
+                            <div class="pt-demo-label">// interactive: loss_landscape.c</div>
+                            <div class="pt-demo-title">Drop a ball on a loss surface</div>
+                        </div>
+                        <canvas class="pt-canvas" width="800" height="360" aria-label="Gradient descent on a loss surface"></canvas>
+                        <div class="pt-demo-controls">
+                            <label class="pt-ctrl">
+                                <span class="pt-ctrl-key">learning_rate</span>
+                                <input type="range" min="0.005" max="0.25" step="0.005" value="0.06" data-ctrl="lr">
+                                <span class="pt-ctrl-val" data-val="lr">0.060</span>
+                            </label>
+                            <button class="pt-btn" data-act="reset">reset</button>
+                            <button class="pt-btn" data-act="randomize">randomize_init</button>
+                        </div>
+                        <div class="pt-demo-foot">Too high and the ball overshoots. Too low and convergence is slow. The &ldquo;right&rdquo; rate depends entirely on the loss geometry.</div>
+                    </div>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> backpropagation</h3>
+                    <p>How do you compute <span class="pt-math-inline" data-tex="\nabla_\theta \mathcal{L}"></span> for a network with billions of parameters? You don't compute it directly. You apply the chain rule layer by layer, starting from the loss and walking backwards:</p>
+                    <div class="pt-math" data-tex="\frac{\partial \mathcal{L}}{\partial W^{(l)}} = \frac{\partial \mathcal{L}}{\partial z^{(l)}} \cdot \frac{\partial z^{(l)}}{\partial W^{(l)}}"></div>
+                    <p>Each layer's gradient is a product of the gradient flowing in from above and the local derivative of its own output. Modern frameworks (PyTorch, JAX) build this computation graph automatically during the forward pass — you write the math, autograd writes the gradients.</p>
+                </section>
+
+                <!-- ========== 02 SFT ========== -->
+                <section class="pt-chapter" id="sft" data-chapter="02">
+                    <header class="pt-ch-head">
+                        <div class="pt-ch-idx">[02]</div>
+                        <h2 class="pt-ch-title">Supervised Fine-Tuning</h2>
+                        <div class="pt-ch-sub">Teaching the model by example.</div>
+                        <div class="pt-ch-cmd"><span class="prompt">$</span> train --method sft</div>
+                    </header>
+
+                    <p>SFT takes a pre-trained model and trains it on curated <em>(instruction, response)</em> pairs. The objective is identical to pre-training — next-token prediction — but on data that demonstrates the behavior you want: helpful, correctly formatted, refusing when it should, reasoning step-by-step when asked.</p>
+
+                    <div class="pt-math" data-tex="\mathcal{L}_{\text{SFT}}(\theta) = -\mathbb{E}_{(x,y) \sim \mathcal{D}} \left[ \sum_{t=1}^{|y|} \log P_\theta(y_t | x, y_{<t}) \right]"></div>
+
+                    <p>Same cross-entropy objective as pre-training, masked to only score the response tokens. The model is penalized for putting low probability on the tokens an expert annotator wrote.</p>
+
+                    <div class="pt-callout">
+                        <div class="pt-callout-head">data quality &gt; data quantity</div>
+                        <p>The LIMA paper (2023) showed 1,000 carefully curated examples can produce surprisingly capable instruction-following. On the other end, Nemotron 3 Super used 7M samples aggressively filtered from a broader 40M-sample corpus. Both extremes share a principle: every sample is vetted.</p>
+                    </div>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> typical hyperparameters</h3>
+                    <div class="pt-table">
+                        <div class="pt-row pt-row-head"><span>parameter</span><span>typical range</span><span>note</span></div>
+                        <div class="pt-row"><span>learning_rate</span><span>1e-5 → 5e-5</span><span>linear warmup, cosine decay</span></div>
+                        <div class="pt-row"><span>epochs</span><span>1 → 3</span><span>more invites overfit</span></div>
+                        <div class="pt-row"><span>batch_size</span><span>32 → 256</span><span>gradient-accumulate to fit</span></div>
+                        <div class="pt-row"><span>max_len</span><span>2k → 16k</span><span>depends on target use-case</span></div>
+                    </div>
+                </section>
+
+                <!-- ========== 03 PEFT ========== -->
+                <section class="pt-chapter" id="peft" data-chapter="03">
+                    <header class="pt-ch-head">
+                        <div class="pt-ch-idx">[03]</div>
+                        <h2 class="pt-ch-title">Parameter-Efficient Methods</h2>
+                        <div class="pt-ch-sub">LoRA, QLoRA, and adapters — fine-tuning without breaking the bank.</div>
+                        <div class="pt-ch-cmd"><span class="prompt">$</span> train --method lora --rank 16</div>
+                    </header>
+
+                    <p>Full fine-tuning updates every weight. For a 70B model that's ~140GB of gradients and optimizer state on top of the weights themselves — out of reach for most hardware. Parameter-efficient fine-tuning (PEFT) freezes the base model and trains a small delta.</p>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> LoRA</h3>
+                    <p>Hu et al. (2021) observed that fine-tuning updates tend to be low-rank. Instead of learning a full <span class="pt-math-inline" data-tex="d \times k"></span> update matrix <span class="pt-math-inline" data-tex="\Delta W"></span>, LoRA decomposes it into two thin matrices:</p>
+                    <div class="pt-math" data-tex="h = W_0 x + \frac{\alpha}{r} \cdot BA\,x, \quad B \in \mathbb{R}^{d \times r},\; A \in \mathbb{R}^{r \times k},\; r \ll \min(d,k)"></div>
+                    <p>With <span class="pt-math-inline" data-tex="r = 16"></span> on a <span class="pt-math-inline" data-tex="4096 \times 4096"></span> layer, you train <span class="pt-math-inline" data-tex="131{,}072"></span> parameters instead of <span class="pt-math-inline" data-tex="16{,}777{,}216"></span> — roughly a 128× reduction. <span class="pt-math-inline" data-tex="A"></span> is initialized from a Gaussian and <span class="pt-math-inline" data-tex="B"></span> is initialized to zero, so <span class="pt-math-inline" data-tex="\Delta W = 0"></span> at the start of training and the model begins identical to the base.</p>
+
+                    <div class="pt-demo" data-demo="lora">
+                        <div class="pt-demo-head">
+                            <div class="pt-demo-label">// interactive: lora_rank.c</div>
+                            <div class="pt-demo-title">Slide rank <em>r</em> — watch parameters collapse</div>
+                        </div>
+                        <div class="pt-lora">
+                            <div class="pt-lora-panel">
+                                <div class="pt-lora-cap">full Δ<em>W</em> &nbsp;<span data-val="lora-full">16,777,216</span> params</div>
+                                <div class="pt-lora-grid" data-grid="full"></div>
+                            </div>
+                            <div class="pt-lora-op">=</div>
+                            <div class="pt-lora-panel">
+                                <div class="pt-lora-cap">B &nbsp;<span data-val="lora-b">65,536</span></div>
+                                <div class="pt-lora-grid" data-grid="b"></div>
+                            </div>
+                            <div class="pt-lora-op">×</div>
+                            <div class="pt-lora-panel">
+                                <div class="pt-lora-cap">A &nbsp;<span data-val="lora-a">65,536</span></div>
+                                <div class="pt-lora-grid" data-grid="a"></div>
+                            </div>
+                        </div>
+                        <div class="pt-demo-controls">
+                            <label class="pt-ctrl">
+                                <span class="pt-ctrl-key">rank</span>
+                                <input type="range" min="1" max="128" step="1" value="16" data-ctrl="rank">
+                                <span class="pt-ctrl-val" data-val="rank">16</span>
+                            </label>
+                            <div class="pt-compression">
+                                compression <span data-val="lora-ratio">128×</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> QLoRA</h3>
+                    <p>Dettmers et al. (2023) pushed PEFT further. QLoRA stores the base weights in 4-bit NormalFloat (NF4) and dequantizes on the fly, while LoRA adapters remain in full precision:</p>
+                    <div class="pt-math" data-tex="h = \text{dequant}(W_{\text{4bit}})\,x + \frac{\alpha}{r}\,BA\,x"></div>
+                    <p>The result: fine-tune a 65B model on a single 48GB GPU. QLoRA democratized post-training — you can now prototype on a desktop workstation.</p>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> DoRA</h3>
+                    <p>Weight-Decomposed Low-Rank Adaptation (Liu et al., 2024) splits each weight matrix into magnitude and direction components, then applies LoRA only to the direction. It recovers some of the quality gap between LoRA and full fine-tuning at no extra inference cost:</p>
+                    <div class="pt-math" data-tex="W_0 = m \cdot \frac{V}{\|V\|_c} \quad \text{where } m = \|W_0\|_c,\; V = W_0"></div>
+                </section>
+
+                <!-- ========== 04 RLHF ========== -->
+                <section class="pt-chapter" id="rlhf" data-chapter="04">
+                    <header class="pt-ch-head">
+                        <div class="pt-ch-idx">[04]</div>
+                        <h2 class="pt-ch-title">RLHF</h2>
+                        <div class="pt-ch-sub">Reinforcement Learning from Human Feedback — the technique that gave us ChatGPT.</div>
+                        <div class="pt-ch-cmd"><span class="prompt">$</span> train --method rlhf --algo ppo</div>
+                    </header>
+
+                    <p>SFT teaches the model what good answers look like. RLHF teaches it which of several plausible answers humans actually prefer. The pipeline has four moving parts:</p>
+
+                    <div class="pt-stepper" data-demo="rlhf">
+                        <div class="pt-stepper-tabs">
+                            <button class="pt-stepper-tab active" data-step="0"><span class="pt-step-num">01</span>SFT model</button>
+                            <button class="pt-stepper-tab" data-step="1"><span class="pt-step-num">02</span>collect prefs</button>
+                            <button class="pt-stepper-tab" data-step="2"><span class="pt-step-num">03</span>reward model</button>
+                            <button class="pt-stepper-tab" data-step="3"><span class="pt-step-num">04</span>PPO</button>
+                        </div>
+                        <div class="pt-stepper-body">
+                            <div class="pt-stepper-panel active" data-step="0">
+                                Start with a supervised fine-tuned model that already follows instructions. RLHF refines <em>how</em> it responds — it doesn't teach it to follow instructions from scratch.
+                            </div>
+                            <div class="pt-stepper-panel" data-step="1">
+                                Sample pairs of outputs from the SFT model. Humans read both responses and mark the better one. You need tens of thousands of such comparisons. This is the rate-limiter of the whole pipeline — and the motivation for RLAIF.
+                            </div>
+                            <div class="pt-stepper-panel" data-step="2">
+                                Train a neural network to predict human preferences from the labeled pairs. The reward model is typically initialized from the SFT model with a scalar head. The loss is a Bradley-Terry logistic regression on score differences.
+                            </div>
+                            <div class="pt-stepper-panel" data-step="3">
+                                The policy model generates responses, the reward model scores them, and PPO updates the policy to maximize reward — with a KL penalty pulling it back toward the reference (SFT) model so it doesn't drift into gibberish that happens to hack the reward.
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> reward model loss</h3>
+                    <p>Given a preferred response <span class="pt-math-inline" data-tex="y_w"></span> and a rejected response <span class="pt-math-inline" data-tex="y_l"></span>, train a reward model <span class="pt-math-inline" data-tex="r_\phi"></span> to assign higher scores to preferred outputs:</p>
+                    <div class="pt-math" data-tex="\mathcal{L}_{\text{RM}}(\phi) = -\mathbb{E}_{(x, y_w, y_l)} \left[ \log \sigma(r_\phi(x, y_w) - r_\phi(x, y_l)) \right]"></div>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> PPO with KL constraint</h3>
+                    <div class="pt-math" data-tex="\max_\theta \mathbb{E}_{x \sim \mathcal{D},\, y \sim \pi_\theta(\cdot|x)} \left[ r_\phi(x, y) - \beta \cdot D_{\text{KL}}(\pi_\theta \| \pi_{\text{ref}}) \right]"></div>
+                    <p>The KL term is what keeps RLHF from collapsing. Without it, the policy quickly discovers degenerate outputs that maximize the reward model but are nonsensical — textbook reward hacking.</p>
+
+                    <div class="pt-callout pt-callout-warn">
+                        <div class="pt-callout-head">four models in memory</div>
+                        <p>RLHF requires simultaneous copies of the policy, reference, reward, and critic models during training. For a 70B policy that's memory-painful before you've done a single optimizer step. This overhead is the original sin that DPO, GRPO, and friends were designed to eliminate.</p>
+                    </div>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> RLAIF &amp; Constitutional AI</h3>
+                    <p>Human preference labels are the bottleneck. RLAIF (Reinforcement Learning from AI Feedback) replaces the human annotator with a larger or differently-prompted LLM. Anthropic's Constitutional AI goes further: a set of written principles guides an AI critic to revise harmful outputs, and the resulting preferences train the policy. The practical upshot is unlimited preference data, compute-bound rather than label-bound.</p>
+                </section>
+
+                <!-- ========== 05 DPO ========== -->
+                <section class="pt-chapter" id="dpo" data-chapter="05">
+                    <header class="pt-ch-head">
+                        <div class="pt-ch-idx">[05]</div>
+                        <h2 class="pt-ch-title">DPO &amp; Variants</h2>
+                        <div class="pt-ch-sub">Skipping the reward model entirely — direct alignment from preferences.</div>
+                        <div class="pt-ch-cmd"><span class="prompt">$</span> train --method dpo</div>
+                    </header>
+
+                    <p>Rafailov et al. (2023) proved something beautiful: under the KL-constrained RLHF objective, the optimal policy has a closed-form solution. The policy <em>is</em> the reward function, up to a normalization constant. You don't need to train a separate reward model and run RL on it — you can optimize the policy directly from preference pairs.</p>
+
+                    <div class="pt-math" data-tex="\pi^*(y|x) = \frac{1}{Z(x)}\, \pi_{\text{ref}}(y|x)\, \exp\!\left(\frac{1}{\beta}\, r(x, y)\right)"></div>
+
+                    <p>Invert this relationship to express the implicit reward in terms of the policy log-ratio:</p>
+                    <div class="pt-math" data-tex="r(x, y) = \beta \log \frac{\pi^*(y|x)}{\pi_{\text{ref}}(y|x)} + \beta \log Z(x)"></div>
+                    <p>Substitute back into the Bradley-Terry preference loss and the partition function <span class="pt-math-inline" data-tex="Z(x)"></span> cancels. What's left is pure supervised learning on preference pairs:</p>
+                    <div class="pt-math" data-tex="\mathcal{L}_{\text{DPO}}(\theta) = -\mathbb{E}_{(x, y_w, y_l)} \left[ \log \sigma\!\left( \beta \log \frac{\pi_\theta(y_w|x)}{\pi_{\text{ref}}(y_w|x)} - \beta \log \frac{\pi_\theta(y_l|x)}{\pi_{\text{ref}}(y_l|x)} \right) \right]"></div>
+
+                    <div class="pt-demo" data-demo="dpo-vs-rlhf">
+                        <div class="pt-demo-head">
+                            <div class="pt-demo-label">// interactive: memory_footprint.c</div>
+                            <div class="pt-demo-title">RLHF vs DPO — models in memory</div>
+                        </div>
+                        <div class="pt-toggle">
+                            <button class="pt-toggle-opt active" data-opt="rlhf">RLHF (PPO)</button>
+                            <button class="pt-toggle-opt" data-opt="dpo">DPO</button>
+                        </div>
+                        <div class="pt-models" data-models>
+                            <div class="pt-model" data-role="policy">policy</div>
+                            <div class="pt-model" data-role="reference">reference</div>
+                            <div class="pt-model" data-role="reward">reward</div>
+                            <div class="pt-model" data-role="critic">critic</div>
+                        </div>
+                        <div class="pt-demo-foot" data-foot>four models in memory — expensive</div>
+                    </div>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> SimPO — drop the reference model</h3>
+                    <p>Meng et al. (2024) noticed that the reference model in DPO is just providing length-normalization and a regularization anchor. Replace both with an explicit length-normalized objective and a margin:</p>
+                    <div class="pt-math" data-tex="\mathcal{L}_{\text{SimPO}} = -\mathbb{E}\!\left[ \log \sigma\!\left( \frac{\beta}{|y_w|} \log \pi_\theta(y_w|x) - \frac{\beta}{|y_l|} \log \pi_\theta(y_l|x) - \gamma \right) \right]"></div>
+                    <p>One model in memory instead of two. In practice SimPO matches or beats DPO on most benchmarks.</p>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> KTO — loss aversion as an objective</h3>
+                    <p>Ethayarajh et al. (2024) drew on Kahneman-Tversky prospect theory: losing $100 feels worse than gaining $100 feels good. KTO bakes this asymmetry directly into the loss function — the model gets punished harder for undesirable outputs than it gets rewarded for good ones. The practical win is that KTO works on unpaired data: you only need a binary "good / bad" label per sample, not a ranked pair.</p>
+                    <div class="pt-math" data-tex="v(x,y) = \begin{cases} \lambda_D\, \sigma(\beta(r_\theta(x,y) - z_0)) & y \text{ desirable} \\ \lambda_U\, \sigma(\beta(z_0 - r_\theta(x,y))) & y \text{ undesirable} \end{cases}"></div>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> ORPO — SFT and alignment in one pass</h3>
+                    <p>Hong et al. (2024) went the other direction: instead of removing stages, merge them. ORPO adds a contrastive odds-ratio term to the standard SFT loss. The SFT term teaches format; the odds-ratio term teaches preference. One stage, no reward model, no reference model:</p>
+                    <div class="pt-math" data-tex="\mathcal{L}_{\text{ORPO}} = \underbrace{-\log P_\theta(y_w|x)}_{\mathcal{L}_{\text{SFT}}} \;-\; \lambda \cdot \underbrace{\log \sigma\!\left(\log \text{OR}_\theta(y_w, y_l | x)\right)}_{\mathcal{L}_{\text{OR}}}"></div>
+                </section>
+
+                <!-- ========== 06 GRPO ========== -->
+                <section class="pt-chapter" id="grpo" data-chapter="06">
+                    <header class="pt-ch-head">
+                        <div class="pt-ch-idx">[06]</div>
+                        <h2 class="pt-ch-title">GRPO &amp; DAPO</h2>
+                        <div class="pt-ch-sub">The algorithms behind DeepSeek-R1 — eliminating the critic model entirely.</div>
+                        <div class="pt-ch-cmd"><span class="prompt">$</span> train --method grpo --group-size 8</div>
+                    </header>
+
+                    <p>PPO needs a critic model to estimate the value function <span class="pt-math-inline" data-tex="V(s)"></span>. Training a good critic is hard — and for a 70B policy, the critic is another 70B of GPU. GRPO (DeepSeek, 2024) makes a simpler observation: you don't need an absolute value estimate to compute useful advantages. You just need <em>relative</em> scores within a group of samples.</p>
+
+                    <div class="pt-math" data-tex="\hat{A}_i = \frac{r_i - \text{mean}(\{r_1, \ldots, r_G\})}{\text{std}(\{r_1, \ldots, r_G\})}"></div>
+
+                    <p>For each prompt, sample <span class="pt-math-inline" data-tex="G"></span> responses, score them with a reward model (or verifier), and normalize within the group. Above-average responses get positive advantages; below-average get negative. The critic is replaced by arithmetic.</p>
+
+                    <div class="pt-demo" data-demo="grpo">
+                        <div class="pt-demo-head">
+                            <div class="pt-demo-label">// interactive: grpo_group.c</div>
+                            <div class="pt-demo-title">Group-relative advantages — G = <span data-val="grpo-g">8</span> samples</div>
+                        </div>
+                        <div class="pt-grpo" data-grpo></div>
+                        <div class="pt-demo-controls">
+                            <label class="pt-ctrl">
+                                <span class="pt-ctrl-key">group_size</span>
+                                <input type="range" min="4" max="16" step="1" value="8" data-ctrl="grpo-size">
+                                <span class="pt-ctrl-val" data-val="grpo-size-val">8</span>
+                            </label>
+                            <button class="pt-btn" data-act="grpo-resample">resample</button>
+                        </div>
+                        <div class="pt-demo-foot">Green bars = positive advantage (better than group mean). Red = negative. PPO-style clipping then controls the update size.</div>
+                    </div>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> the GRPO objective</h3>
+                    <div class="pt-math" data-tex="\mathcal{L}_{\text{GRPO}}(\theta) = -\frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} \left[ \min\!\left( r_{i,t}\,\hat{A}_i,\; \text{clip}(r_{i,t},\, 1\!-\!\epsilon,\, 1\!+\!\epsilon)\, \hat{A}_i \right) - \beta\, D_{\text{KL}}\!\left[\pi_\theta \| \pi_{\text{ref}}\right]_{i,t} \right]"></div>
+                    <p>Same clipped surrogate as PPO, but with group-relative advantages and no critic. DeepSeek-R1 used GRPO on verifier-based rewards to produce chain-of-thought reasoning that rivals frontier proprietary models.</p>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> DAPO — stabilizing long-horizon RL</h3>
+                    <p>DAPO (ByteDance/Tsinghua, 2025) isolates the instabilities that hit GRPO when chain-of-thought outputs get long. It introduces four patches — <em>token-level policy gradient loss</em> (per-token normalization instead of per-sequence), <em>clip-higher</em> (asymmetric clipping that lets low-probability tokens update more freely), <em>dynamic sampling</em> (drop prompts where every sample in the group gets the same reward — zero gradient signal), and <em>overlong-reward shaping</em> (penalize runaway generations). On AIME 2024, DAPO reached 50 points using Qwen2.5-32B as the base — the first open-source RL system to hit frontier math-reasoning scores.</p>
+                </section>
+
+                <!-- ========== 07 REASONING ========== -->
+                <section class="pt-chapter" id="reasoning" data-chapter="07">
+                    <header class="pt-ch-head">
+                        <div class="pt-ch-idx">[07]</div>
+                        <h2 class="pt-ch-title">Reasoning &amp; RLVR</h2>
+                        <div class="pt-ch-sub">Verifiable rewards, self-play, and the emergence of reasoning capabilities.</div>
+                        <div class="pt-ch-cmd"><span class="prompt">$</span> train --method grpo --reward verify</div>
+                    </header>
+
+                    <p>The expensive part of RLHF is the reward model — training it requires human labels, and the final quality is capped by human judgment. For math, code, and structured reasoning, you don't need that. A unit test passes or fails. A proof checker accepts or rejects. A math expression is correct or isn't.</p>
+                    <div class="pt-math" data-tex="r(x, y) = \begin{cases} 1 & \text{if } \texttt{verify}(y) = \text{correct} \\ 0 & \text{otherwise} \end{cases}"></div>
+                    <p>RLVR — Reinforcement Learning with Verifiable Rewards — swaps the reward model for a verifier. Faster, cheaper, more consistent. The reward signal is ground truth rather than a learned approximation.</p>
+
+                    <div class="pt-callout">
+                        <div class="pt-callout-head">emergent reasoning behaviors</div>
+                        <p>When trained with RLVR and enough compute, models start exhibiting behaviors nobody wrote a prompt for: self-verification, backtracking, working through multiple approaches, catching their own arithmetic mistakes mid-derivation. DeepSeek-R1's training trace showed extended chains of thought emerging spontaneously as the policy discovered they produced higher verified-reward rates.</p>
+                    </div>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> self-play and closed loops</h3>
+                    <p>Combine RLVR with a model that can generate its own training data and you get a closed loop: the model identifies its weaknesses by where it fails verification, synthesizes harder problems in those regions, trains on them, and repeats. No human in the loop. The limits of this loop are an active research question — and arguably the most important one in the field.</p>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> agentic RL</h3>
+                    <p>The newest frontier is training models for multi-step tool use. NVIDIA's NeMo Gym exposes interactive RL environments supporting multi-turn rollouts, tool-calling verification, and decoupled agent/environment architectures. Nemotron 3 Super was trained across 21 environment configurations producing 1.2 million rollouts. This is the template for how models become agents: RL on tasks where the reward only resolves after a sequence of tool calls.</p>
+                </section>
+
+                <!-- ========== 08 ADVANCED ========== -->
+                <section class="pt-chapter" id="advanced" data-chapter="08">
+                    <header class="pt-ch-head">
+                        <div class="pt-ch-idx">[08]</div>
+                        <h2 class="pt-ch-title">Advanced Topics</h2>
+                        <div class="pt-ch-sub">Model merging, distillation, continual learning — the broader toolkit.</div>
+                        <div class="pt-ch-cmd"><span class="prompt">$</span> ls /opt/post-training/advanced</div>
+                    </header>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> model merging</h3>
+                    <p>Take two fine-tuned checkpoints from the same base model and average their weights. The result frequently inherits capabilities from both parents:</p>
+                    <div class="pt-math" data-tex="\theta_{\text{merged}} = (1 - \alpha)\,\theta_A + \alpha\,\theta_B"></div>
+                    <p>More sophisticated variants (TIES-merging, DARE, Task Arithmetic) resolve sign conflicts and prune redundant parameters before averaging. Merging works best when models share a common base and architecture. Many of the top open-source models on public leaderboards are merges of specialist fine-tunes, not single monolithic runs.</p>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> knowledge distillation</h3>
+                    <p>Train a small student model to match a large teacher's output distribution. The student learns from soft targets (logits over the full vocabulary) instead of hard labels:</p>
+                    <div class="pt-math" data-tex="\mathcal{L}_{\text{distill}} = \alpha \cdot D_{\text{KL}}\big(P_{\text{teacher}}(\cdot|x;\tau) \,\|\, P_{\text{student}}(\cdot|x;\tau)\big) + (1-\alpha) \cdot \mathcal{L}_{\text{CE}}"></div>
+                    <p>The temperature <span class="pt-math-inline" data-tex="\tau"></span> softens both distributions, surfacing the teacher's uncertainty about nearby tokens — a richer signal than the argmax alone. This is how most small frontier-adjacent models get their surprising capability-per-parameter.</p>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> continual learning</h3>
+                    <p>Fine-tune a model on task B after task A and it will often forget A — catastrophic forgetting. Elastic Weight Consolidation (Kirkpatrick et al., 2017) penalizes movement in parameters that were important for task A, letting less-critical weights absorb task B. For production pipelines with repeated domain updates, some form of continual-learning constraint is the difference between a model that stays useful and one that regresses on every refresh.</p>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> other PEFT families</h3>
+                    <div class="pt-table">
+                        <div class="pt-row pt-row-head"><span>method</span><span>what it adapts</span><span>when to use</span></div>
+                        <div class="pt-row"><span>prefix tuning</span><span>virtual tokens prepended to keys/values</span><span>few tasks, strong base</span></div>
+                        <div class="pt-row"><span>adapters</span><span>bottleneck MLP inserted per layer</span><span>multi-task serving</span></div>
+                        <div class="pt-row"><span>IA³</span><span>scaling vectors on K/V/FFN</span><span>ultra-low param budget</span></div>
+                        <div class="pt-row"><span>LoRA / QLoRA</span><span>low-rank update matrices</span><span>default choice</span></div>
+                    </div>
+                </section>
+
+                <!-- ========== 09 PRACTICAL ========== -->
+                <section class="pt-chapter" id="practical" data-chapter="09">
+                    <header class="pt-ch-head">
+                        <div class="pt-ch-idx">[09]</div>
+                        <h2 class="pt-ch-title">Practical Guide</h2>
+                        <div class="pt-ch-sub">Choosing methods, hyperparameters, and pipelines.</div>
+                        <div class="pt-ch-cmd"><span class="prompt">$</span> which method</div>
+                    </header>
+
+                    <div class="pt-decision" data-demo="decision">
+                        <div class="pt-dec-node pt-dec-root">
+                            <div class="pt-dec-q">what do you have?</div>
+                        </div>
+                        <div class="pt-dec-branches">
+                            <div class="pt-dec-branch">
+                                <div class="pt-dec-cond">labeled (instruction, response) pairs</div>
+                                <div class="pt-dec-pick"><span class="pt-dec-pill">SFT</span> <span class="pt-dec-pill">+ LoRA</span></div>
+                                <div class="pt-dec-note">Start here. One stage, cheap, high ROI.</div>
+                            </div>
+                            <div class="pt-dec-branch">
+                                <div class="pt-dec-cond">preference pairs, no reward model</div>
+                                <div class="pt-dec-pick"><span class="pt-dec-pill">DPO</span> <span class="pt-dec-pill">ORPO</span></div>
+                                <div class="pt-dec-note">ORPO if you want to skip a separate SFT stage.</div>
+                            </div>
+                            <div class="pt-dec-branch">
+                                <div class="pt-dec-cond">binary good / bad labels only</div>
+                                <div class="pt-dec-pick"><span class="pt-dec-pill">KTO</span></div>
+                                <div class="pt-dec-note">Unpaired data works. Loss-aversion regularizes the update.</div>
+                            </div>
+                            <div class="pt-dec-branch">
+                                <div class="pt-dec-cond">verifier (unit tests, math checker, judge)</div>
+                                <div class="pt-dec-pick"><span class="pt-dec-pill">GRPO + RLVR</span></div>
+                                <div class="pt-dec-note">The recipe behind DeepSeek-R1 and most frontier reasoning models.</div>
+                            </div>
+                            <div class="pt-dec-branch">
+                                <div class="pt-dec-cond">long chain-of-thought, training instability</div>
+                                <div class="pt-dec-pick"><span class="pt-dec-pill">DAPO</span></div>
+                                <div class="pt-dec-note">Use when GRPO collapses on long outputs.</div>
+                            </div>
+                            <div class="pt-dec-branch">
+                                <div class="pt-dec-cond">strong teacher, small target model</div>
+                                <div class="pt-dec-pick"><span class="pt-dec-pill">distillation</span></div>
+                                <div class="pt-dec-note">Pair with SFT or preference tuning for the final polish.</div>
+                            </div>
+                            <div class="pt-dec-branch">
+                                <div class="pt-dec-cond">multiple specialist checkpoints, same base</div>
+                                <div class="pt-dec-pick"><span class="pt-dec-pill">merging</span></div>
+                                <div class="pt-dec-note">TIES or DARE before averaging.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> common pitfalls</h3>
+                    <ul class="pt-list">
+                        <li><span class="pt-li-key">reward hacking</span> — policy finds degenerate outputs that score high but aren't what you want. Keep <span class="pt-math-inline" data-tex="\beta"></span> on the KL term. Hold out a diverse eval set.</li>
+                        <li><span class="pt-li-key">distribution shift</span> — SFT data and preference-tuning data come from different distributions. ORPO dodges this by unifying stages; otherwise keep the SFT distribution represented in downstream data.</li>
+                        <li><span class="pt-li-key">overfitting to the reward model</span> — the RM is a proxy, not the objective. Its calibration drifts as the policy does. Refresh preferences periodically.</li>
+                        <li><span class="pt-li-key">catastrophic forgetting</span> — a fresh post-training run can silently regress on benchmarks you didn't re-measure. Maintain a frozen regression suite.</li>
+                        <li><span class="pt-li-key">under-powered group size in GRPO</span> — too-small <span class="pt-math-inline" data-tex="G"></span> means noisy advantage estimates. Start at 8, go to 16 on harder tasks.</li>
+                    </ul>
+
+                    <h3 class="pt-h3"><span class="prompt">&gt;</span> the arc of the field</h3>
+                    <p>Post-training has evolved from a single technique (RLHF) into a modular ecosystem. The trend is unmistakable: each generation of methods removes a dependency. RLHF needed four models and human annotators. DPO removed the reward model and critic. SimPO removed the reference model. ORPO merged SFT and alignment into one stage. RLVR replaced human labels with automated verification. We're converging on systems that improve themselves — not through magic, but through the same math of gradient descent applied to progressively better objectives.</p>
+                </section>
+
+                <footer class="pt-ref">
+                    <div class="section-label">// refs</div>
+                    <ul class="pt-ref-list">
+                        <li>Hu et al. — <em>LoRA: Low-Rank Adaptation of Large Language Models</em> (2021)</li>
+                        <li>Stiennon et al. — <em>Learning to Summarize from Human Feedback</em> (2020)</li>
+                        <li>Bai et al. — <em>Constitutional AI: Harmlessness from AI Feedback</em> (Anthropic, 2022)</li>
+                        <li>Dettmers et al. — <em>QLoRA: Efficient Finetuning of Quantized LLMs</em> (2023)</li>
+                        <li>Zhou et al. — <em>LIMA: Less Is More for Alignment</em> (2023)</li>
+                        <li>Rafailov et al. — <em>Direct Preference Optimization</em> (2023)</li>
+                        <li>Meng et al. — <em>SimPO: Simple Preference Optimization</em> (2024)</li>
+                        <li>Ethayarajh et al. — <em>KTO: Model Alignment as Prospect Theoretic Optimization</em> (2024)</li>
+                        <li>Hong et al. — <em>ORPO: Monolithic Preference Optimization</em> (2024)</li>
+                        <li>Liu et al. — <em>DoRA: Weight-Decomposed Low-Rank Adaptation</em> (2024)</li>
+                        <li>DeepSeek-AI — <em>DeepSeekMath / DeepSeek-R1</em> (2024 — 2025)</li>
+                        <li>ByteDance / Tsinghua — <em>DAPO: Decoupled Advantage Policy Optimization</em> (2025)</li>
+                        <li>Kirkpatrick et al. — <em>Overcoming Catastrophic Forgetting</em> (2017)</li>
+                        <li>Lambert — <em>A Survey on Post-training of LLMs</em> (2025)</li>
+                    </ul>
+                </footer>
+
+            </article>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="divider"></div>
+        <div class="footer-prompt">
+            <span class="prompt">&gt;</span>
+            <span>tail -f /var/log/post_training.log</span>
+            <span class="cursor"></span>
+        </div>
+    </footer>
+
+</div>
+
+<script src="network.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="post-training.js"></script>
+</body>
+</html>
