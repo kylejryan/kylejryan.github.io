@@ -1,4 +1,7 @@
 (function () {
+    // ponytail: honor reduced-motion — skip the animated bg entirely.
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     var canvas = document.createElement('canvas');
     canvas.setAttribute('aria-hidden', 'true');
     canvas.style.cssText =
