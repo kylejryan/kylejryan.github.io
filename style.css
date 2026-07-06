@@ -1,13 +1,12 @@
 :root {
     --bg: #030303;
-    --bg-surface: #0A0A0A;
     --ink: #FFFFFF;
     --ink-dim: rgba(255, 255, 255, 0.6);
     --ink-faint: rgba(255, 255, 255, 0.15);
-    --border: rgba(255, 255, 255, 0.3);
+    --border: rgba(255, 255, 255, 0.15);
+    --border-strong: rgba(255, 255, 255, 0.28);
     --font-sans: "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --font-mono: "SF Mono", "Roboto Mono", Menlo, Consolas, monospace;
-    --font-display: "Helvetica Neue", -apple-system, sans-serif;
     --pad: clamp(20px, 5vw, 80px);
 }
 
@@ -30,20 +29,6 @@ body {
     line-height: 1.4;
 }
 
-body.has-fixed-footer {
-    overflow: hidden;
-}
-
-body.has-fixed-footer .app-container {
-    height: 100vh;
-    height: 100dvh;
-}
-
-body.has-fixed-footer .main-content {
-    overflow-y: auto;
-    padding-bottom: 80px;
-}
-
 a {
     color: var(--ink);
     text-decoration: none;
@@ -62,6 +47,18 @@ a:hover { opacity: 0.7; }
 .log-line.output a:hover {
     opacity: 1;
     border-bottom-color: var(--ink);
+}
+
+/* Terminal selection: invert, like a block cursor sweep */
+::selection {
+    background-color: var(--ink);
+    color: var(--bg);
+}
+
+/* Terminal focus: hairline white ring, no browser default */
+:focus-visible {
+    outline: 1px solid var(--ink);
+    outline-offset: 3px;
 }
 
 ::-webkit-scrollbar { width: 0px; background: transparent; }
@@ -99,7 +96,7 @@ a:hover { opacity: 0.7; }
     display: flex;
     align-items: center;
     padding-bottom: 20px;
-    border-bottom: 1px solid var(--ink);
+    border-bottom: 1px solid var(--border-strong);
 }
 
 .nav-links {
@@ -123,6 +120,12 @@ a:hover { opacity: 0.7; }
     opacity: 1;
 }
 
+/* Active page reads as the executed one: ./HOME */
+.nav-links a.active::before {
+    content: "./";
+    color: var(--ink-dim);
+}
+
 
 /* ========================================
    HERO
@@ -134,7 +137,7 @@ a:hover { opacity: 0.7; }
 }
 
 .hero-title {
-    font-family: var(--font-display);
+    font-family: var(--font-sans);
     font-size: clamp(48px, 8vw, 96px);
     font-weight: 500;
     line-height: 0.9;
@@ -164,7 +167,7 @@ a:hover { opacity: 0.7; }
 
 
 /* ========================================
-   DOTTED DIVIDER (from react-app.js)
+   DOTTED DIVIDER
    ======================================== */
 
 .divider {
@@ -174,10 +177,6 @@ a:hover { opacity: 0.7; }
     background-size: 6px 1px;
     background-repeat: repeat-x;
     margin: 32px 0;
-}
-
-.divider-sm {
-    margin: 20px 0;
 }
 
 
@@ -209,6 +208,8 @@ a:hover { opacity: 0.7; }
 .log-line.output {
     opacity: 0.7;
     padding-left: 20px;
+    max-width: 72ch;
+    line-height: 1.6;
 }
 
 .log-line.cmd {
@@ -219,62 +220,34 @@ a:hover { opacity: 0.7; }
     margin-top: 0;
 }
 
-.highlight {
-    background-color: var(--ink);
-    color: var(--bg);
-    padding: 1px 6px;
-    display: inline-block;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-}
-
 
 /* ========================================
-   CRT SCAN LINE EFFECT
+   BOOT SEQUENCE ENTRANCE
+   Top-level blocks rise + fade in, staggered
+   like a terminal printing output. Parent-level
+   opacity is multiplicative, so child .output
+   lines keep their own 0.7. Reduced-motion safe:
+   base state is already the final state.
    ======================================== */
 
-.app-container::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(255, 255, 255, 0.008) 2px,
-        rgba(255, 255, 255, 0.008) 4px
-    );
-    pointer-events: none;
-    z-index: 99;
+.site-nav,
+.main-content > * {
+    animation: boot 0.5s cubic-bezier(0.2, 0.6, 0.2, 1) both;
 }
 
-.app-container::after {
-    content: '';
-    position: fixed;
-    top: -100%;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background: linear-gradient(
-        180deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.015) 40%,
-        rgba(255, 255, 255, 0.03) 50%,
-        rgba(255, 255, 255, 0.015) 60%,
-        transparent 100%
-    );
-    pointer-events: none;
-    z-index: 100;
-    animation: scanline 6s linear infinite;
+@keyframes boot {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes scanline {
-    0% { top: -60px; }
-    100% { top: 100vh; }
-}
+.site-nav               { animation-delay: 0ms; }
+.main-content > *:nth-child(1) { animation-delay: 90ms; }
+.main-content > *:nth-child(2) { animation-delay: 150ms; }
+.main-content > *:nth-child(3) { animation-delay: 210ms; }
+.main-content > *:nth-child(4) { animation-delay: 270ms; }
+.main-content > *:nth-child(5) { animation-delay: 330ms; }
+.main-content > *:nth-child(6) { animation-delay: 390ms; }
+.main-content > *:nth-child(n+7) { animation-delay: 450ms; }
 
 
 /* ========================================
@@ -298,6 +271,23 @@ a:hover { opacity: 0.7; }
     margin-right: 8px;
     color: var(--ink-dim);
     user-select: none;
+}
+
+/* Lines emitted by tail.js above the footer prompt */
+.tail-line {
+    font-size: 12px;
+    color: var(--ink);
+    opacity: 0.3;
+    margin-top: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    animation: tail-in 0.3s ease-out;
+}
+
+@keyframes tail-in {
+    from { opacity: 0; }
+    to   { opacity: 0.3; }
 }
 
 
@@ -336,6 +326,7 @@ a.log-entry:hover {
     color: var(--ink);
     font-weight: 400;
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 }
 
 .log-body {
@@ -386,37 +377,6 @@ a.log-entry:hover {
 
 .active-process .log-entry {
     border-bottom: none;
-}
-
-
-/* ========================================
-   INPUT FOOTER (blog page)
-   ======================================== */
-
-.input-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: var(--bg);
-    padding: 20px var(--pad);
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    z-index: 10;
-}
-
-.prompt-symbol {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--ink-dim);
-}
-
-.footer-text {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--ink);
 }
 
 
@@ -565,5 +525,24 @@ a.log-entry:hover {
     .connect-grid {
         flex-direction: column;
         gap: 12px;
+    }
+}
+
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+
+    .site-nav,
+    .main-content > * {
+        animation: none;
+    }
+
+    .cursor {
+        animation: none;
+        opacity: 1;
     }
 }

@@ -1,0 +1,7 @@
+{
+  "name": "kylejryan-github-io",
+  "private": true,
+  "scripts": {
+    "dev": "bun run server.ts"
+  }
+}
