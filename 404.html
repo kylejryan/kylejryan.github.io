@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Kyle Ryan</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="app-container">
+
+    <header class="site-header">
+        <nav class="site-nav">
+            <span class="tmux-session">[kryan.sh]</span>
+            <div class="nav-links">
+                <a href="/">0:home</a>
+                <a href="/research">1:research</a>
+                <a href="/logs">2:logs</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="hero">
+            <h1 class="hero-title">404</h1>
+            <div class="hero-meta">SYS/404</div>
+        </section>
+
+        <div class="divider"></div>
+
+        <div class="terminal-block">
+            <div class="log-line cmd">
+                <span class="prompt">&gt;</span>
+                <span>cat requested_page</span>
+            </div>
+            <div class="log-line output">
+                <span>cat: requested_page: No such file or directory</span>
+            </div>
+            <div class="log-line cmd">
+                <span class="prompt">&gt;</span>
+                <span>cd <a href="/">~</a></span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="divider"></div>
+        <div class="footer-prompt">
+            <span class="prompt">&gt;</span>
+            <span>tail -f /var/log/httpd/error_log</span>
+            <span class="cursor"></span>
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>

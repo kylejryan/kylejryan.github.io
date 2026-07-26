@@ -37,14 +37,16 @@ a {
 
 a:hover { opacity: 0.7; }
 
-.log-line.output a {
+.log-line.output a,
+.log-line.cmd a {
     color: inherit;
     opacity: 1;
     border-bottom: 1px solid var(--ink-faint);
     transition: border-color 0.15s;
 }
 
-.log-line.output a:hover {
+.log-line.output a:hover,
+.log-line.cmd a:hover {
     opacity: 1;
     border-bottom-color: var(--ink);
 }
@@ -92,38 +94,52 @@ a:hover { opacity: 0.7; }
     flex-shrink: 0;
 }
 
+/* tmux status line: [session]  0:window  1:window* */
 .site-nav {
     display: flex;
     align-items: center;
+    gap: 24px;
     padding-bottom: 20px;
     border-bottom: 1px solid var(--border-strong);
+    font-family: var(--font-mono);
+    font-size: 12px;
+}
+
+.tmux-session {
+    color: var(--ink-dim);
+    user-select: none;
 }
 
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 20px;
     list-style: none;
 }
 
 .nav-links a {
     color: var(--ink-dim);
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
     font-family: var(--font-mono);
+    padding: 12px 0;
+    margin: -12px 0;
 }
 
-.nav-links a:hover,
-.nav-links a.active {
+.nav-links a:hover {
     color: var(--ink);
     opacity: 1;
 }
 
-/* Active page reads as the executed one: ./HOME */
-.nav-links a.active::before {
-    content: "./";
-    color: var(--ink-dim);
+/* Current window: inverted, like tmux window-status-current */
+.nav-links a.active {
+    background-color: var(--ink);
+    color: var(--bg);
+    padding: 1px 6px;
+    margin: -1px -6px;
+    opacity: 1;
+}
+
+.nav-links a.active::after {
+    content: "*";
 }
 
 
@@ -144,6 +160,18 @@ a:hover { opacity: 0.7; }
     letter-spacing: -3px;
 }
 
+/* ASCII banner (figlet DOS Rebel). 88 cols ≈ 53em in mono;
+   font-size scales so it always fits the padded viewport. */
+.hero-ascii {
+    font-family: var(--font-mono);
+    font-size: clamp(4px, calc((100vw - 2 * var(--pad)) / 54), 13px);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: pre;
+    overflow: hidden;
+}
+
 .hero-subtitle {
     font-family: var(--font-sans);
     font-size: 15px;
@@ -151,6 +179,18 @@ a:hover { opacity: 0.7; }
     color: var(--ink-dim);
     margin-top: 20px;
     line-height: 1.6;
+}
+
+.hero-subtitle a {
+    color: inherit;
+    border-bottom: 1px solid var(--ink-faint);
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.hero-subtitle a:hover {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+    opacity: 1;
 }
 
 .hero-meta {
@@ -332,9 +372,10 @@ a.log-entry:hover {
 
 .log-output {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 13px;
     color: var(--ink-dim);
-    line-height: 1.5;
+    line-height: 1.6;
+    max-width: 72ch;
 }
 
 .active-process {
@@ -406,10 +447,10 @@ a.log-entry:hover {
 }
 
 .research-desc {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--ink-dim);
     line-height: 1.6;
-    max-width: 700px;
+    max-width: 72ch;
 }
 
 
