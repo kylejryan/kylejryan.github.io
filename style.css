@@ -273,24 +273,6 @@ a:hover { opacity: 0.7; }
     user-select: none;
 }
 
-/* Lines emitted by tail.js above the footer prompt */
-.tail-line {
-    font-size: 12px;
-    color: var(--ink);
-    opacity: 0.3;
-    margin-top: 6px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    animation: tail-in 0.3s ease-out;
-}
-
-@keyframes tail-in {
-    from { opacity: 0; }
-    to   { opacity: 0.3; }
-}
-
-
 /* ========================================
    BLOG LOG ENTRIES
    ======================================== */
@@ -302,7 +284,7 @@ a:hover { opacity: 0.7; }
 
 .log-entry {
     display: grid;
-    grid-template-columns: 100px 1fr 80px;
+    grid-template-columns: 100px 1fr;
     gap: 16px;
     padding: 20px 0;
     border-bottom: 1px solid var(--border);
@@ -353,18 +335,6 @@ a.log-entry:hover {
     font-size: 12px;
     color: var(--ink-dim);
     line-height: 1.5;
-}
-
-.log-status {
-    font-size: 10px;
-    text-align: right;
-    color: var(--ink);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.status-active {
-    color: var(--ink);
 }
 
 .active-process {
@@ -516,10 +486,6 @@ a.log-entry:hover {
     .log-time {
         font-size: 10px;
         color: var(--ink-dim);
-    }
-
-    .log-status {
-        text-align: left;
     }
 
     .connect-grid {
