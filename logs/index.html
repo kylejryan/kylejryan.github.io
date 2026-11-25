@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logs - Kyle Ryan</title>
-    <meta name="description" content="Writing on AI agents, autonomous offensive security, and what machine-speed operations mean for defenders.">
-    <meta property="og:title" content="Logs - Kyle Ryan">
-    <meta property="og:description" content="Writing on AI agents, autonomous offensive security, and what machine-speed operations mean for defenders.">
+    <title>Logs | Kyle Ryan</title>
+    <meta name="description" content="Articles by Kyle Ryan on AI research, autonomous agents, and offensive security, from Adversarial Systems and other publications.">
+    <link rel="canonical" href="https://kryan.sh/logs/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kryan.sh/logs/">
+    <meta property="og:title" content="Logs | Kyle Ryan">
+    <meta property="og:description" content="Articles by Kyle Ryan on AI research, autonomous agents, and offensive security, from Adversarial Systems and other publications.">
+    <meta name="twitter:card" content="summary">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/style.css">
 </head>
@@ -20,7 +24,8 @@
             <div class="nav-links">
                 <a href="/">0:home</a>
                 <a href="/research">1:research</a>
-                <a href="/logs" class="active">2:logs</a>
+                <a href="/logs" class="active" aria-current="page">2:logs</a>
+                <a href="/talks">3:talks</a>
             </div>
         </nav>
     </header>
@@ -28,6 +33,7 @@
     <main class="main-content">
         <section class="hero">
             <h1 class="hero-title">Logs</h1>
+            <p class="hero-subtitle"><a href="https://www.adversarialsystems.com/subscribe" target="_blank" rel="noopener">Subscribe to Adversarial Systems</a></p>
             <div class="hero-meta">SYS/003</div>
         </section>
 
@@ -35,55 +41,70 @@
 
         <div class="log-list">
 
+            <!-- BEGIN articles -->
+            <a class="log-entry" href="https://www.adversarialsystems.com/p/how-to-run-a-one-man-cyber-offensive" target="_blank" rel="noopener">
+                <time class="log-time" datetime="2026-10-28">2026.10.28</time>
+                <div class="log-body">
+                    <div class="log-cmd">cat how_to_run_a_one_man_cyber_offensive.md</div>
+                    <div class="log-output">How to Run a One-Man Cyber Offensive With AI Agents. Inside ARTEX, the open-source framework linked to South Korea&#x27;s financial-sector breaches—and the engineering behind scalable offensive operations.</div>
+                    <div class="entry-source">Adversarial Systems</div>
+                </div>
+            </a>
+
+            <a class="log-entry" href="https://www.adversarialsystems.com/p/how-ai-labs-are-using-agents-to-build" target="_blank" rel="noopener">
+                <time class="log-time" datetime="2026-10-08">2026.10.08</time>
+                <div class="log-body">
+                    <div class="log-cmd">cat how_ai_labs_are_using_agents_to_build.md</div>
+                    <div class="log-output">How AI Labs Are Using Agents to Build AI. AI researchers are delegating more of the research loop to agents—from code and experiments to trace analysis, evaluation, and post-training.</div>
+                    <div class="entry-source">Adversarial Systems</div>
+                </div>
+            </a>
+
             <a class="log-entry" href="https://www.adversarialsystems.com/p/the-end-of-human-speed-cyber-operations" target="_blank" rel="noopener">
-                <div class="log-time">2026.07.08</div>
+                <time class="log-time" datetime="2026-07-08">2026.07.08</time>
                 <div class="log-body">
                     <div class="log-cmd">cat end_of_human_speed_cyber_operations.md</div>
-                    <div class="log-output">
-                        The End of Human-Speed Cyber Operations. How agents chained ordinary vulnerabilities into an end-to-end ransomware operation&mdash;fully autonomous.
-                    </div>
+                    <div class="log-output">The End of Human-Speed Cyber Operations. How agents chained ordinary vulnerabilities into an end-to-end ransomware operation—fully autonomous.</div>
+                    <div class="entry-source">Adversarial Systems</div>
                 </div>
             </a>
 
             <a class="log-entry" href="https://www.adversarialsystems.com/p/the-new-hire-has-no-pulse" target="_blank" rel="noopener">
-                <div class="log-time">2026.06.30</div>
+                <time class="log-time" datetime="2026-06-30">2026.06.30</time>
                 <div class="log-body">
                     <div class="log-cmd">cat the_new_hire_has_no_pulse.md</div>
-                    <div class="log-output">
-                        The New Hire Has No Pulse. Software can do the work now. Every system built around a human doing it is breaking.
-                    </div>
+                    <div class="log-output">The New Hire Has No Pulse. Software can do the work now. Every system built around a human doing it is breaking.</div>
+                    <div class="entry-source">Adversarial Systems</div>
                 </div>
             </a>
 
             <a class="log-entry" href="https://www.linkedin.com/pulse/how-teams-pulling-ahead-ship-agents-without-kyle-ryan-poj2e/" target="_blank" rel="noopener">
-                <div class="log-time">2026.04.29</div>
+                <time class="log-time" datetime="2026-04-29">2026.04.29</time>
                 <div class="log-body">
                     <div class="log-cmd">cat ship_agents_without_post_mortems.md</div>
-                    <div class="log-output">
-                        How Teams Pulling Ahead Ship Agents Without the Post-Mortems. The operating model behind teams shipping agents into production at meaningful volume&mdash;and what most teams get wrong.
-                    </div>
+                    <div class="log-output">How Teams Pulling Ahead Ship Agents Without the Post-Mortems. The operating model behind teams shipping agents into production at meaningful volume—and what most teams get wrong.</div>
+                    <div class="entry-source">LinkedIn</div>
                 </div>
             </a>
 
             <a class="log-entry" href="https://www.linkedin.com/pulse/why-your-competitors-10-person-team-bury-you-kyle-ryan-yyp0e/" target="_blank" rel="noopener">
-                <div class="log-time">2026.04.21</div>
+                <time class="log-time" datetime="2026-04-21">2026.04.21</time>
                 <div class="log-body">
                     <div class="log-cmd">cat why_your_competitors_10_person_team_will_bury_you.md</div>
-                    <div class="log-output">
-                        Why Your Competitor's 10-Person Team Will Bury You. The 2026 data on what AI does to a startup's cost structure&mdash;and why the adoption window is closing faster than founders think.
-                    </div>
+                    <div class="log-output">Why Your Competitor&#x27;s 10-Person Team Will Bury You. The 2026 data on what AI does to a startup&#x27;s cost structure—and why the adoption window is closing faster than founders think.</div>
+                    <div class="entry-source">LinkedIn</div>
                 </div>
             </a>
 
             <a class="log-entry" href="https://www.linkedin.com/pulse/anatomy-ai-orchestrated-government-breach-kyle-ryan-qvfje/" target="_blank" rel="noopener">
-                <div class="log-time">2026.02.26</div>
+                <time class="log-time" datetime="2026-02-26">2026.02.26</time>
                 <div class="log-body">
                     <div class="log-cmd">cat ai_orchestrated_breach.md</div>
-                    <div class="log-output">
-                        Anatomy of an AI-Orchestrated Government Breach. A solo attacker used Claude as a penetration testing co-pilot to compromise roughly a dozen Mexican government and infrastructure targets. What happened at the systems level, what the jailbreak actually exploited, and why the real lesson isn't about AI safety theater.
-                    </div>
+                    <div class="log-output">Anatomy of an AI-Orchestrated Government Breach. A solo attacker used Claude as a penetration testing co-pilot to compromise roughly a dozen Mexican government and infrastructure targets. What happened at the systems level, what the jailbreak actually exploited, and why the real lesson isn&#x27;t about AI safety theater.</div>
+                    <div class="entry-source">LinkedIn</div>
                 </div>
             </a>
+            <!-- END articles -->
 
         </div>
     </main>

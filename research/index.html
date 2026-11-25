@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research - Kyle Ryan</title>
-    <meta name="description" content="Research: autonomous offensive security, AI cyber capability evaluation, and AI safety for adversarial domains.">
-    <meta property="og:title" content="Research - Kyle Ryan">
-    <meta property="og:description" content="Research: autonomous offensive security, AI cyber capability evaluation, and AI safety for adversarial domains.">
+    <title>Research | Kyle Ryan</title>
+    <meta name="description" content="Kyle Ryan’s research in autonomous agents, model post-training, reinforcement learning, capability evaluation, AI alignment, multi-agent systems, privacy, and offensive security.">
+    <link rel="canonical" href="https://kryan.sh/research/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kryan.sh/research/">
+    <meta property="og:title" content="Research | Kyle Ryan">
+    <meta property="og:description" content="Kyle Ryan’s research in autonomous agents, model post-training, reinforcement learning, capability evaluation, AI alignment, multi-agent systems, privacy, and offensive security.">
+    <meta name="twitter:card" content="summary">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/style.css">
 </head>
@@ -19,8 +23,9 @@
             <span class="tmux-session">[kryan.sh]</span>
             <div class="nav-links">
                 <a href="/">0:home</a>
-                <a href="/research" class="active">1:research</a>
+                <a href="/research" class="active" aria-current="page">1:research</a>
                 <a href="/logs">2:logs</a>
+                <a href="/talks">3:talks</a>
             </div>
         </nav>
     </header>
@@ -29,7 +34,7 @@
         <section class="hero">
             <h1 class="hero-title">Research</h1>
             <p class="hero-subtitle">
-                Operating at the intersection of artificial intelligence and cybersecurity.
+                My research interests span artificial intelligence, autonomous systems, and security. I'm particularly interested in how we build, train, and evaluate increasingly capable AI systems, how they behave in complex and adversarial environments, and how we can safely deploy them at scale.
             </p>
             <div class="hero-meta">SYS/002</div>
         </section>
@@ -39,36 +44,46 @@
         <div class="section-label">// cat research_areas.md</div>
 
         <div class="research-grid">
-            <div class="research-item" id="autonomous-offensive-security">
+            <section class="research-item" id="agentic-ai-autonomous-systems">
                 <div class="research-index">[01]</div>
-                <div class="research-title">Autonomous Offensive Security</div>
-                <div class="research-desc">RL-trained agents that discover and exploit vulnerabilities end-to-end&mdash;characterizing the frontier of AI cyber capabilities, building the benchmarks to measure them, and translating findings into actionable defense.</div>
-            </div>
-            <div class="research-item" id="ai-cyber-capability-evaluation">
+                <h2 class="research-title">Agentic AI &amp; Autonomous Systems</h2>
+                <p class="research-desc">Agent architectures, harness engineering, tool use, reasoning, planning, context management, and long-horizon autonomous task execution.</p>
+            </section>
+            <section class="research-item" id="model-post-training-rl">
                 <div class="research-index">[02]</div>
-                <div class="research-title">AI Cyber Capability Evaluation</div>
-                <div class="research-desc">Designing realistic environments, experiments, and metrics that elicit and measure what AI systems can actually do in security contexts&mdash;from CTF-scale challenges to full-lifecycle attack simulations against defended infrastructure.</div>
-            </div>
-            <div class="research-item" id="ai-safety-adversarial-domains">
+                <h2 class="research-title">Model Post-Training &amp; Reinforcement Learning</h2>
+                <p class="research-desc">Supervised fine-tuning, reinforcement learning, knowledge distillation, synthetic data generation, reward design, and the development of training environments for specialized model capabilities.</p>
+            </section>
+            <section class="research-item" id="ai-capability-evaluation">
+                <span class="anchor-alias" id="ai-cyber-capability-evaluation" aria-hidden="true"></span>
                 <div class="research-index">[03]</div>
-                <div class="research-title">AI Safety for Adversarial Domains</div>
-                <div class="research-desc">Understanding how autonomous agents behave under adversarial pressure&mdash;emergent misalignment from reward hacking, capability elicitation methodology, containment architecture, and the policy implications of AI systems reaching expert-level cyber capabilities.</div>
-            </div>
-            <div class="research-item" id="cyber-physical-systems-security">
+                <h2 class="research-title">AI Capability Evaluation &amp; Elicitation</h2>
+                <p class="research-desc">Experimental methodologies, benchmarks, capability measurement, generalization, and the relationship between underlying model capabilities and the architectures through which they are elicited.</p>
+            </section>
+            <section class="research-item" id="ai-alignment-safety">
+                <span class="anchor-alias" id="ai-safety-adversarial-domains" aria-hidden="true"></span>
                 <div class="research-index">[04]</div>
-                <div class="research-title">Cyber-Physical Systems Security</div>
-                <div class="research-desc">Studying adversarial control of systems where software compromise produces physical effects&mdash;including robotics, drones, industrial systems, and critical infrastructure&mdash;with a focus on control planes, autonomy, sensing, communications, and safety-critical failure modes.</div>
-            </div>
-            <div class="research-item" id="mobile-embedded-hardware-security">
+                <h2 class="research-title">AI Alignment &amp; Safety</h2>
+                <p class="research-desc">Model behavior under distribution shift, reward hacking, emergent misalignment, dangerous capability evaluations, and the alignment of increasingly autonomous AI systems.</p>
+            </section>
+            <section class="research-item" id="multi-agent-systems">
                 <div class="research-index">[05]</div>
-                <div class="research-title">Mobile, Embedded &amp; Hardware Security</div>
-                <div class="research-desc">Investigating attack surfaces across phones, embedded devices, firmware, trusted hardware, and specialized computing platforms&mdash;spanning low-level software, hardware-software trust boundaries, device protocols, and exploitation below the application layer.</div>
-            </div>
-            <div class="research-item" id="vulnerability-exploit-research">
+                <h2 class="research-title">Multi-Agent Systems</h2>
+                <p class="research-desc">Cooperation, competition, game theory, emergent behavior, and safety in environments where autonomous agents interact under shared or conflicting objectives.</p>
+            </section>
+            <section class="research-item" id="ai-privacy-security">
                 <div class="research-index">[06]</div>
-                <div class="research-title">Vulnerability &amp; Exploit Research</div>
-                <div class="research-desc">Discovering and exploiting vulnerabilities in modern software and infrastructure&mdash;from novel attack primitives and exploit chains to proof-of-concept development and systematic analysis of the conditions that make real-world compromise possible.</div>
-            </div>
+                <h2 class="research-title">AI Privacy &amp; Security</h2>
+                <p class="research-desc">The security and privacy properties of AI models and agentic systems, including adversarial manipulation, information leakage, training data privacy, and trust boundaries.</p>
+            </section>
+            <section class="research-item" id="autonomous-offensive-security">
+                <span class="anchor-alias" id="cyber-physical-systems-security" aria-hidden="true"></span>
+                <span class="anchor-alias" id="mobile-embedded-hardware-security" aria-hidden="true"></span>
+                <span class="anchor-alias" id="vulnerability-exploit-research" aria-hidden="true"></span>
+                <div class="research-index">[07]</div>
+                <h2 class="research-title">Autonomous Offensive Security</h2>
+                <p class="research-desc">Applications of artificial intelligence to automated vulnerability discovery, vulnerability research, adversary simulation, attack surface analysis, and security testing across software, infrastructure, embedded systems, and cyber-physical environments.</p>
+            </section>
         </div>
 
         <div class="divider"></div>
@@ -80,34 +95,7 @@
                 <span class="prompt">&gt;</span>
                 <span>cat current_work.txt</span>
             </div>
-            <div class="log-line output"><span>Building autonomous pentesting systems. Designing and shipping AI agents that execute the full attack chain end-to-end&mdash;automated reconnaissance, vulnerability discovery, exploit development, and remediation&mdash;without human intervention.</span></div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="section-label">// cat talks.log</div>
-
-        <div class="terminal-block">
-            <div class="log-line cmd">
-                <span class="prompt">&gt;</span>
-                <span>grep -r "recent" talks/</span>
-            </div>
-            <div class="log-line output"><span>BSides Delaware &mdash; "When AI Hackers Attack Each Other"</span></div>
-            <div class="log-line output"><span>NYU OSIRIS Lab &mdash; "Autonomous Offensive Security"</span></div>
-            <div class="log-line output"><span>BSides Connecticut &mdash; "AI-Powered Spear Phishing: Precision Attacks at Machine Speed"</span></div>
-            <div class="log-line output"><span>Columbia University &mdash; "The Evolution of AI-Powered Cyberattacks: How APTs and Cybercrime Groups are Leveraging AI"</span></div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="section-label">// cat teaching.log</div>
-
-        <div class="terminal-block">
-            <div class="log-line cmd">
-                <span class="prompt">&gt;</span>
-                <span>cat ~/teaching/current_semester</span>
-            </div>
-            <div class="log-line output"><span>Fordham University &mdash; Data Structures (C++)</span></div>
+            <div class="log-line output"><span>Developing and post-training specialized AI models, advancing autonomous agent architectures, and building experimental infrastructure to measure and improve AI capabilities in adversarial environments. I want to push the Pareto frontier for specialized security models.</span></div>
         </div>
 
     </main>

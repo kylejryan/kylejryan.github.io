@@ -355,7 +355,24 @@ a.log-entry:hover {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
+
+.entry-source, .talk-link {
+    font-size: 11px;
+    color: var(--ink-dim);
+}
+
+.talk-link a {
+    color: inherit;
+    border-bottom: 1px solid var(--border-strong);
+}
+
+.talk-group { margin-top: 32px; }
+.talk-group .section-label { margin-bottom: 0; }
+.talk-group .log-body { grid-column: -2 / -1; }
+.talk-title { font-size: 14px; font-weight: 500; }
 
 .log-cmd {
     font-family: var(--font-mono);
@@ -422,8 +439,14 @@ a.log-entry:hover {
 }
 
 .research-item {
+    position: relative;
     padding: 24px 0;
     border-bottom: 1px solid var(--border);
+}
+
+.anchor-alias {
+    position: absolute;
+    top: 0;
 }
 
 .research-item:last-child {

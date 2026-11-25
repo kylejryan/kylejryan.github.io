@@ -1,0 +1,58 @@
+[
+  {
+    "date": "2026-10-28",
+    "title": "How to Run a One-Man Cyber Offensive With AI Agents",
+    "description": "Inside ARTEX, the open-source framework linked to South Korea's financial-sector breaches—and the engineering behind scalable offensive operations.",
+    "source": "Adversarial Systems",
+    "url": "https://www.adversarialsystems.com/p/how-to-run-a-one-man-cyber-offensive",
+    "filename": "how_to_run_a_one_man_cyber_offensive.md"
+  },
+  {
+    "date": "2026-10-08",
+    "title": "How AI Labs Are Using Agents to Build AI",
+    "description": "AI researchers are delegating more of the research loop to agents—from code and experiments to trace analysis, evaluation, and post-training.",
+    "source": "Adversarial Systems",
+    "url": "https://www.adversarialsystems.com/p/how-ai-labs-are-using-agents-to-build",
+    "filename": "how_ai_labs_are_using_agents_to_build.md"
+  },
+  {
+    "date": "2026-07-08",
+    "title": "The End of Human-Speed Cyber Operations",
+    "description": "How agents chained ordinary vulnerabilities into an end-to-end ransomware operation—fully autonomous.",
+    "source": "Adversarial Systems",
+    "url": "https://www.adversarialsystems.com/p/the-end-of-human-speed-cyber-operations",
+    "filename": "end_of_human_speed_cyber_operations.md"
+  },
+  {
+    "date": "2026-06-30",
+    "title": "The New Hire Has No Pulse",
+    "description": "Software can do the work now. Every system built around a human doing it is breaking.",
+    "source": "Adversarial Systems",
+    "url": "https://www.adversarialsystems.com/p/the-new-hire-has-no-pulse",
+    "filename": "the_new_hire_has_no_pulse.md"
+  },
+  {
+    "date": "2026-04-29",
+    "title": "How Teams Pulling Ahead Ship Agents Without the Post-Mortems",
+    "description": "The operating model behind teams shipping agents into production at meaningful volume—and what most teams get wrong.",
+    "source": "LinkedIn",
+    "url": "https://www.linkedin.com/pulse/how-teams-pulling-ahead-ship-agents-without-kyle-ryan-poj2e/",
+    "filename": "ship_agents_without_post_mortems.md"
+  },
+  {
+    "date": "2026-04-21",
+    "title": "Why Your Competitor's 10-Person Team Will Bury You",
+    "description": "The 2026 data on what AI does to a startup's cost structure—and why the adoption window is closing faster than founders think.",
+    "source": "LinkedIn",
+    "url": "https://www.linkedin.com/pulse/why-your-competitors-10-person-team-bury-you-kyle-ryan-yyp0e/",
+    "filename": "why_your_competitors_10_person_team_will_bury_you.md"
+  },
+  {
+    "date": "2026-02-26",
+    "title": "Anatomy of an AI-Orchestrated Government Breach",
+    "description": "A solo attacker used Claude as a penetration testing co-pilot to compromise roughly a dozen Mexican government and infrastructure targets. What happened at the systems level, what the jailbreak actually exploited, and why the real lesson isn't about AI safety theater.",
+    "source": "LinkedIn",
+    "url": "https://www.linkedin.com/pulse/anatomy-ai-orchestrated-government-breach-kyle-ryan-qvfje/",
+    "filename": "ai_orchestrated_breach.md"
+  }
+]
